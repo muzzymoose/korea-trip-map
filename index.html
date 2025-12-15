@@ -504,7 +504,7 @@
 
         const days = [
             {
-                day: 1,
+                day: 0,
                 date: "Dec 19",
                 title: "Departure",
                 mapImage: null,
@@ -516,7 +516,7 @@
                 region: "Malaysia → Korea"
             },
             {
-                day: 2,
+                day: 1,
                 date: "Dec 20",
                 title: "Arrival & Ski Resort",
                 mapImage: mapImages.incheonGangwon,
@@ -531,7 +531,7 @@
                 region: "Incheon → Gangwon-do"
             },
             {
-                day: 3,
+                day: 2,
                 date: "Dec 21",
                 title: "Full Ski Day",
                 mapImage: mapImages.skiResort,
@@ -543,7 +543,7 @@
                 region: "Ski Resort"
             },
             {
-                day: 4,
+                day: 3,
                 date: "Dec 22",
                 title: "Resort Activities",
                 mapImage: mapImages.skiResort,
@@ -555,7 +555,7 @@
                 region: "Ski Resort"
             },
             {
-                day: 5,
+                day: 4,
                 date: "Dec 23",
                 title: "Nami Island → Seoul",
                 mapImage: mapImages.namiWide,
@@ -572,7 +572,7 @@
                 region: "Gangwon → Gapyeong → Seoul"
             },
             {
-                day: 6,
+                day: 5,
                 date: "Dec 24",
                 title: "Seoul Cultural Day",
                 mapImage: mapImages.seoulDetail,
@@ -599,7 +599,7 @@
                 region: "Central Seoul (Jongno-gu)"
             },
             {
-                day: 7,
+                day: 6,
                 date: "Dec 25",
                 title: "Christmas Gangnam",
                 mapImage: mapImages.seoulDetail,
@@ -620,7 +620,7 @@
                 region: "Central → Gangnam → Jamsil"
             },
             {
-                day: 8,
+                day: 7,
                 date: "Dec 26",
                 title: "Mosque + Hongdae",
                 mapImage: mapImages.seoulDetail,
@@ -640,7 +640,7 @@
                 region: "Multi-district Seoul"
             },
             {
-                day: 9,
+                day: 8,
                 date: "Dec 27",
                 title: "Free & Easy Shopping",
                 mapImage: mapImages.seoulDetail,
@@ -660,7 +660,7 @@
                 region: "Seoul Shopping Districts"
             },
             {
-                day: 10,
+                day: 9,
                 date: "Dec 28",
                 title: "Departure",
                 mapImage: mapImages.incheonGangwon,
@@ -714,7 +714,7 @@
             const container = document.getElementById('dayButtons');
             container.innerHTML = days.map(day => `
                 <button class="day-btn ${day.day === currentDay ? 'active' : ''}" onclick="selectDay(${day.day})">
-                    <div class="day-label">Day ${day.day}</div>
+                    <div class="day-label">Day ${day.day + 1}</div>
                     <div class="day-date">${day.date}</div>
                 </button>
             `).join('');
@@ -729,7 +729,7 @@
         function renderDay() {
             const day = days[currentDay];
             
-            document.getElementById('dayTitle').textContent = `Day ${day.day}: ${day.title}`;
+            document.getElementById('dayTitle').textContent = `Day ${day.day + 1}: ${day.title}`;
             document.getElementById('regionText').textContent = day.region;
             document.getElementById('statDriving').textContent = `${day.stats.driving}km`;
             document.getElementById('statSubway').textContent = `${day.stats.subway}m`;
