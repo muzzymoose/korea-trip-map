@@ -309,6 +309,7 @@
     <script>
         let map;
         let markers = [];
+        let polylines = []; // Add this to track route lines
         let currentDay = 0;
         
         const typeColors = {
@@ -606,9 +607,12 @@
             document.getElementById('statSubway').textContent = `${d.stats.subway}min`;
             document.getElementById('statWalking').textContent = `${d.stats.walking}km`;
 
-            // Clear existing markers
+            // Clear existing markers and polylines
             markers.forEach(m => m.setMap(null));
             markers = [];
+            
+            polylines.forEach(p => p.setMap(null));
+            polylines = [];
 
             // Update map center and zoom
             map.setCenter(d.center);
@@ -674,6 +678,8 @@
                         strokeWeight: 3,
                         map: map
                     });
+                    
+                    polylines.push(path); // Store the polyline so we can clear it later
                 });
             }
 
