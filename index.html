@@ -81,16 +81,18 @@
         .card h3 { color: #1f2937; margin-bottom: 16px; font-size: 18px; }
         
         .map-container {
-            background-color: #f3f4f6;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
             border-radius: 12px;
             border: 2px solid #e5e7eb;
-            padding: 16px;
             position: relative;
             height: 500px;
             margin-bottom: 16px;
+            overflow: hidden; /* Important for Google Maps */
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
         }
  
         .map-svg {
@@ -245,6 +247,7 @@
     </style>
 </head>
 <body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMh_ugrzORkdBLgzyY-SbbJSGy3-mbafw&callback=initMap" async defer></script>
     <div class="container">
         <div class="header">
             <h1>🇰🇷 Korea Family Trip - Full Schedule</h1>
@@ -276,12 +279,12 @@
                             <div class="stat-label">Walking</div>
                         </div>
                     </div>
-                    <div class="map-container" id="mapContainer">
-                        <svg class="map-svg" id="mapSvg"></svg>
-                        <div id="locations"></div>
-                        <div class="region-label">
-                            <div class="region-label-title">Region</div>
-                            <div class="region-label-text" id="regionText">Malaysia</div>
+                        <div class="map-container">
+                            <div id="map"></div>
+                            <div class="region-label">
+                                <div class="region-label-title">Region</div>
+                                <div class="region-label-text" id="regionText">Malaysia</div>
+                            </div>
                         </div>
                     </div>
                     <div class="legend-grid">
@@ -304,27 +307,40 @@
     </div>
 
     <script>
-        const mapImages = {
-            skiResort: 'map-ski-resort.png',
-            namiWide: 'map-nami-wide.png',
-            incheonGangwon: 'map-incheon-gangwon.png',
-            seoulDetail: 'map-seoul-detail.png',
-            seoulCulture: 'map-seoul-culture.png',
-            coexJamsil: 'map-coex-jamsil.png'
+        let map;
+        let markers = [];
+        let currentDay = 0;
+        
+        const typeColors = {
+            home: "#3b82f6",      // blue
+            airport: "#a855f7",   // purple
+            resort: "#22c55e",    // green
+            attraction: "#eab308", // yellow
+            shopping: "#ec4899",  // pink
+            food: "#f97316"       // orange
         };
 
         const scheduleData = [
             {
-                day: 0, date: "Dec 19", title: "Departure", mapImage: null,
-                locations: [{ name: "KLIA", type: "airport", position: { x: 50, y: 50 } }],
-                routes: [], stats: { driving: 0, subway: 0, walking: 0 },
-                schedule: [{ time: "Evening", location: "KLIA", activity: "Depart to Incheon", transport: null }]
+                day: 0, date: "Dec 19", title: "Departure",
+                center: { lat: 3.1390, lng: 101.6869 }, // KLIA
+                zoom: 10,
+                locations: [
+                    { name: "KLIA", type: "airport", coords: { lat: 2.7456, lng: 101.7098 } }
+                ],
+                routes: [], 
+                stats: { driving: 0, subway: 0, walking: 0 },
+                schedule: [
+                    { time: "Evening", location: "KLIA", activity: "Depart to Incheon", transport: null }
+                ]
             },
             {
-                day: 1, date: "Dec 20", title: "Arrival & Ski Resort", mapImage: mapImages.incheonGangwon,
+                day: 1, date: "Dec 20", title: "Arrival & Ski Resort",
+                center: { lat: 37.6500, lng: 128.6700 },
+                zoom: 9,
                 locations: [
-                    { name: "Incheon", type: "airport", position: { x: 15, y: 55 } },
-                    { name: "Ski Resort", type: "resort", position: { x: 85, y: 25 } }
+                    { name: "Incheon", type: "airport", coords: { lat: 37.4602, lng: 126.4407 } },
+                    { name: "Ski Resort", type: "resort", coords: { lat: 37.6500, lng: 128.6700 } }
                 ],
                 routes: [{ from: 0, to: 1, type: "car" }],
                 stats: { driving: 150, subway: 0, walking: 1 },
@@ -341,9 +357,14 @@
                 ]
             },
             {
-                day: 2, date: "Dec 21", title: "Full Ski Day", mapImage: mapImages.skiResort,
-                locations: [{ name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }],
-                routes: [], stats: { driving: 0, subway: 0, walking: 2 },
+                day: 2, date: "Dec 21", title: "Full Ski Day",
+                center: { lat: 37.6500, lng: 128.6700 },
+                zoom: 14,
+                locations: [
+                    { name: "Ski Resort", type: "resort", coords: { lat: 37.6500, lng: 128.6700 } }
+                ],
+                routes: [], 
+                stats: { driving: 0, subway: 0, walking: 2 },
                 schedule: [
                     { time: "8:00", location: "Restaurant", activity: "Breakfast", transport: "🚶" },
                     { time: "9:00", location: "Slopes", activity: "Ski lesson (2hrs)", transport: null },
@@ -357,9 +378,14 @@
                 ]
             },
             {
-                day: 3, date: "Dec 22", title: "Resort Activities", mapImage: mapImages.skiResort,
-                locations: [{ name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }],
-                routes: [], stats: { driving: 0, subway: 0, walking: 2 },
+                day: 3, date: "Dec 22", title: "Resort Activities",
+                center: { lat: 37.6500, lng: 128.6700 },
+                zoom: 14,
+                locations: [
+                    { name: "Ski Resort", type: "resort", coords: { lat: 37.6500, lng: 128.6700 } }
+                ],
+                routes: [], 
+                stats: { driving: 0, subway: 0, walking: 2 },
                 schedule: [
                     { time: "8:00", location: "Restaurant", activity: "Breakfast", transport: "🚶" },
                     { time: "9:30", location: "Gondola", activity: "Gondola ride", transport: null },
@@ -372,13 +398,18 @@
                 ]
             },
             {
-                day: 4, date: "Dec 23", title: "Nami Island → Seoul", mapImage: mapImages.namiWide,
+                day: 4, date: "Dec 23", title: "Nami Island → Seoul",
+                center: { lat: 37.7913, lng: 127.5261 },
+                zoom: 9,
                 locations: [
-                    { name: "Ski Resort", type: "resort", position: { x: 85, y: 25 } },
-                    { name: "Nami Island", type: "attraction", position: { x: 35, y: 32 } },
-                    { name: "Seoul Airbnb", type: "home", position: { x: 10, y: 70 } }
+                    { name: "Ski Resort", type: "resort", coords: { lat: 37.6500, lng: 128.6700 } },
+                    { name: "Nami Island", type: "attraction", coords: { lat: 37.7913, lng: 127.5261 } },
+                    { name: "Seoul Airbnb", type: "home", coords: { lat: 37.5834, lng: 126.9852 } }
                 ],
-                routes: [{ from: 0, to: 1, type: "car" }, { from: 1, to: 2, type: "car" }],
+                routes: [
+                    { from: 0, to: 1, type: "car" }, 
+                    { from: 1, to: 2, type: "car" }
+                ],
                 stats: { driving: 200, subway: 0, walking: 3 },
                 schedule: [
                     { time: "9:00", location: "Ski Resort", activity: "Check-out", transport: "🚗 1.5h" },
@@ -394,16 +425,18 @@
                 ]
             },
             {
-                day: 5, date: "Dec 24", title: "Seoul Cultural Day", mapImage: mapImages.seoulCulture,
+                day: 5, date: "Dec 24", title: "Seoul Cultural Day",
+                center: { lat: 37.5760, lng: 126.9838 },
+                zoom: 13,
                 locations: [
-                    { name: "Airbnb", type: "home", position: { x: 52, y: 24 } },
-                    { name: "Onion", type: "food", position: { x: 56, y: 18 } },
-                    { name: "Palace", type: "attraction", position: { x: 22, y: 28 } },
-                    { name: "Bukchon", type: "attraction", position: { x: 48, y: 30 } },
-                    { name: "Insadong", type: "shopping", position: { x: 62, y: 45 } },
-                    { name: "Ikseondong", type: "attraction", position: { x: 72, y: 48 } },
-                    { name: "Myeongdong", type: "shopping", position: { x: 48, y: 92 } },
-                    { name: "Stream", type: "attraction", position: { x: 38, y: 85 } }
+                    { name: "Airbnb", type: "home", coords: { lat: 37.5834, lng: 126.9852 } },
+                    { name: "Onion", type: "food", coords: { lat: 37.5796, lng: 126.9856 } },
+                    { name: "Palace", type: "attraction", coords: { lat: 37.5796, lng: 126.9770 } },
+                    { name: "Bukchon", type: "attraction", coords: { lat: 37.5824, lng: 126.9852 } },
+                    { name: "Insadong", type: "shopping", coords: { lat: 37.5720, lng: 126.9856 } },
+                    { name: "Ikseondong", type: "attraction", coords: { lat: 37.5717, lng: 126.9917 } },
+                    { name: "Myeongdong", type: "shopping", coords: { lat: 37.5636, lng: 126.9826 } },
+                    { name: "Stream", type: "attraction", coords: { lat: 37.5696, lng: 126.9783 } }
                 ],
                 routes: [
                     { from: 0, to: 1, type: "walk" }, { from: 1, to: 2, type: "walk" },
@@ -426,17 +459,21 @@
                 ]
             },
             {
-                day: 6, date: "Dec 25", title: "Christmas Gangnam", mapImage: mapImages.coexJamsil,
+                day: 6, date: "Dec 25", title: "Christmas Gangnam",
+                center: { lat: 37.5400, lng: 127.0000 },
+                zoom: 12,
                 locations: [
-                    { name: "Airbnb", type: "home", position: { x: 32, y: 8 } },
-                    { name: "Namdaemun", type: "shopping", position: { x: 12, y: 18 } },
-                    { name: "Myeongdong", type: "shopping", position: { x: 18, y: 20 } },
-                    { name: "COEX", type: "shopping", position: { x: 78, y: 72 } },
-                    { name: "Jamsil", type: "attraction", position: { x: 92, y: 68 } }
+                    { name: "Airbnb", type: "home", coords: { lat: 37.5834, lng: 126.9852 } },
+                    { name: "Namdaemun", type: "shopping", coords: { lat: 37.5598, lng: 126.9770 } },
+                    { name: "Myeongdong", type: "shopping", coords: { lat: 37.5636, lng: 126.9826 } },
+                    { name: "COEX", type: "shopping", coords: { lat: 37.5115, lng: 127.0595 } },
+                    { name: "Jamsil", type: "attraction", coords: { lat: 37.5111, lng: 127.0981 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway" }, { from: 1, to: 2, type: "walk" },
-                    { from: 2, to: 3, type: "subway" }, { from: 3, to: 4, type: "subway" }
+                    { from: 0, to: 1, type: "subway" }, 
+                    { from: 1, to: 2, type: "walk" },
+                    { from: 2, to: 3, type: "subway" }, 
+                    { from: 3, to: 4, type: "subway" }
                 ],
                 stats: { driving: 0, subway: 95, walking: 2 },
                 schedule: [
@@ -452,15 +489,18 @@
                 ]
             },
             {
-                day: 7, date: "Dec 26", title: "Mosque + Hongdae", mapImage: mapImages.seoulDetail,
+                day: 7, date: "Dec 26", title: "Mosque + Hongdae",
+                center: { lat: 37.5400, lng: 126.9000 },
+                zoom: 12,
                 locations: [
-                    { name: "Airbnb", type: "home", position: { x: 55, y: 35 } },
-                    { name: "Hongdae", type: "shopping", position: { x: 28, y: 48 } },
-                    { name: "Itaewon", type: "attraction", position: { x: 48, y: 58 } },
-                    { name: "Dongdaemun", type: "shopping", position: { x: 65, y: 40 } }
+                    { name: "Airbnb", type: "home", coords: { lat: 37.5834, lng: 126.9852 } },
+                    { name: "Hongdae", type: "shopping", coords: { lat: 37.5563, lng: 126.9236 } },
+                    { name: "Itaewon", type: "attraction", coords: { lat: 37.5347, lng: 126.9946 } },
+                    { name: "Dongdaemun", type: "shopping", coords: { lat: 37.5707, lng: 127.0098 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway" }, { from: 1, to: 2, type: "subway" },
+                    { from: 0, to: 1, type: "subway" }, 
+                    { from: 1, to: 2, type: "subway" },
                     { from: 2, to: 3, type: "car" }
                 ],
                 stats: { driving: 20, subway: 60, walking: 2 },
@@ -479,15 +519,18 @@
                 ]
             },
             {
-                day: 8, date: "Dec 27", title: "Free & Easy Shopping", mapImage: mapImages.seoulDetail,
+                day: 8, date: "Dec 27", title: "Free & Easy Shopping",
+                center: { lat: 37.5500, lng: 127.0000 },
+                zoom: 12,
                 locations: [
-                    { name: "Airbnb", type: "home", position: { x: 55, y: 35 } },
-                    { name: "Myeongdong", type: "shopping", position: { x: 50, y: 50 } },
-                    { name: "Dongdaemun", type: "shopping", position: { x: 65, y: 40 } },
-                    { name: "COEX", type: "shopping", position: { x: 72, y: 70 } }
+                    { name: "Airbnb", type: "home", coords: { lat: 37.5834, lng: 126.9852 } },
+                    { name: "Myeongdong", type: "shopping", coords: { lat: 37.5636, lng: 126.9826 } },
+                    { name: "Dongdaemun", type: "shopping", coords: { lat: 37.5707, lng: 127.0098 } },
+                    { name: "COEX", type: "shopping", coords: { lat: 37.5115, lng: 127.0595 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway" }, { from: 1, to: 2, type: "subway" },
+                    { from: 0, to: 1, type: "subway" }, 
+                    { from: 1, to: 2, type: "subway" },
                     { from: 2, to: 3, type: "subway" }
                 ],
                 stats: { driving: 0, subway: 95, walking: 3 },
@@ -501,10 +544,12 @@
                 ]
             },
             {
-                day: 9, date: "Dec 28", title: "Departure", mapImage: mapImages.incheonGangwon,
+                day: 9, date: "Dec 28", title: "Departure",
+                center: { lat: 37.5000, lng: 126.7000 },
+                zoom: 10,
                 locations: [
-                    { name: "Airbnb", type: "home", position: { x: 35, y: 55 } },
-                    { name: "Incheon", type: "airport", position: { x: 15, y: 55 } }
+                    { name: "Airbnb", type: "home", coords: { lat: 37.5834, lng: 126.9852 } },
+                    { name: "Incheon", type: "airport", coords: { lat: 37.4602, lng: 126.4407 } }
                 ],
                 routes: [{ from: 0, to: 1, type: "bus" }],
                 stats: { driving: 60, subway: 0, walking: 0 },
@@ -521,14 +566,20 @@
             }
         ];
 
-        let currentDay = 0;
-        const typeColors = {
-            home: "bg-blue", airport: "bg-purple", resort: "bg-green",
-            attraction: "bg-yellow", shopping: "bg-pink", food: "bg-orange"
-        };
-        const routeColors = {
-            car: "route-car", subway: "route-subway", walk: "route-walk", bus: "route-bus"
-        };
+        // Initialize Google Map
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: 37.5665, lng: 126.9780 }, // Seoul default
+                mapTypeControl: true,
+                streetViewControl: true,
+                fullscreenControl: true,
+                zoomControl: true
+            });
+
+            renderButtons();
+            renderDay();
+        }
 
         function renderButtons() {
             document.getElementById('dayButtons').innerHTML = scheduleData.map(d => 
@@ -547,28 +598,86 @@
 
         function renderDay() {
             const d = scheduleData[currentDay];
+            
+            // Update title and stats
             document.getElementById('dayTitle').textContent = `Day ${d.day + 1}: ${d.title}`;
             document.getElementById('regionText').textContent = d.title;
             document.getElementById('statDriving').textContent = `${d.stats.driving}km`;
             document.getElementById('statSubway').textContent = `${d.stats.subway}min`;
             document.getElementById('statWalking').textContent = `${d.stats.walking}km`;
 
-            const mapContainer = document.getElementById('mapContainer');
-            mapContainer.style.backgroundImage = d.mapImage ? `url('${d.mapImage}')` : 'none';
+            // Clear existing markers
+            markers.forEach(m => m.setMap(null));
+            markers = [];
 
-            document.getElementById('mapSvg').innerHTML = d.routes.map(r => {
-                const from = d.locations[r.from].position;
-                const to = d.locations[r.to].position;
-                return `<line x1="${from.x}%" y1="${from.y}%" x2="${to.x}%" y2="${to.y}%" class="route-line ${routeColors[r.type]}" />`;
-            }).join('');
+            // Update map center and zoom
+            map.setCenter(d.center);
+            map.setZoom(d.zoom);
 
-            document.getElementById('locations').innerHTML = d.locations.map((loc, i) => `
-                <div class="location-marker" style="left: ${loc.position.x}%; top: ${loc.position.y}%;">
-                    <div class="marker-icon ${typeColors[loc.type]}"></div>
-                    <div class="marker-label">${i + 1}. ${loc.name}</div>
-                </div>
-            `).join('');
+            // Add markers for each location
+            d.locations.forEach((loc, index) => {
+                const marker = new google.maps.Marker({
+                    position: loc.coords,
+                    map: map,
+                    title: loc.name,
+                    label: {
+                        text: (index + 1).toString(),
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '12px'
+                    },
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 18,
+                        fillColor: typeColors[loc.type],
+                        fillOpacity: 1,
+                        strokeColor: 'white',
+                        strokeWeight: 3
+                    }
+                });
 
+                // Add info window on click
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="padding: 8px; font-family: sans-serif;">
+                            <strong style="font-size: 14px; color: #1f2937;">${loc.name}</strong><br>
+                            <span style="color: #6b7280; font-size: 12px; text-transform: capitalize;">${loc.type}</span>
+                        </div>
+                    `
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                });
+
+                markers.push(marker);
+            });
+
+            // Draw simple routes
+            if (d.routes && d.routes.length > 0) {
+                d.routes.forEach(route => {
+                    const start = d.locations[route.from].coords;
+                    const end = d.locations[route.to].coords;
+                    
+                    const routeColors = {
+                        car: '#3b82f6',
+                        subway: '#22c55e', 
+                        walk: '#eab308',
+                        bus: '#a855f7'
+                    };
+
+                    const path = new google.maps.Polyline({
+                        path: [start, end],
+                        geodesic: true,
+                        strokeColor: routeColors[route.type] || '#6b7280',
+                        strokeOpacity: 0.7,
+                        strokeWeight: 3,
+                        map: map
+                    });
+                });
+            }
+
+            // Render schedule
             document.getElementById('timeline').innerHTML = d.schedule.map(s => `
                 <div class="timeline-item">
                     <div class="timeline-time"><div class="time-badge">${s.time}</div></div>
@@ -582,8 +691,8 @@
             `).join('');
         }
 
-        renderButtons();
-        renderDay();
+        // Make selectDay available globally
+        window.selectDay = selectDay;
     </script>
 </body>
 </html>
