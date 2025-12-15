@@ -244,6 +244,15 @@
         .legend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 16px; }
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
         .legend-color { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+        .timeline-item:hover {
+            transform: translateX(4px);
+            transition: all 0.2s ease;
+        }
+
+        .timeline-item {
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -310,6 +319,7 @@
         let map;
         let markers = [];
         let polylines = []; // Add this to track route lines
+        let markersByLocation = {};
         let currentDay = 0;
         
         const typeColors = {
@@ -655,6 +665,7 @@
                 });
 
                 markers.push(marker);
+                markersByLocation[loc.name] = marker;
             });
 
             // Draw simple routes
@@ -684,8 +695,8 @@
             }
 
             // Render schedule
-            document.getElementById('timeline').innerHTML = d.schedule.map(s => `
-                <div class="timeline-item">
+            document.getElementById('timeline').innerHTML = d.schedule.map((s, idx) => `
+                <div class="timeline-item" onclick="highlightLocation('${s.location}', ${idx})" style="cursor: pointer;">
                     <div class="timeline-time"><div class="time-badge">${s.time}</div></div>
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
@@ -696,6 +707,55 @@
                 </div>
             `).join('');
         }
+
+        // Highlight pin when timeline item is clicked
+        function highlightLocation(locationName, scheduleIndex) {
+            const d = scheduleData[currentDay];
+            const marker = markersByLocation[locationName];
+            
+            if (marker) {
+                // 1. Pan map to this location smoothly
+                map.panTo(marker.getPosition());
+                
+                // 2. Zoom in if needed
+                if (map.getZoom() < 15) {
+                    map.setZoom(15);
+                }
+                
+                // 3. Make marker bounce
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(() => marker.setAnimation(null), 1500); // Stop after 1.5 seconds
+                
+                // 4. Open info window with activity details
+                const activity = d.schedule[scheduleIndex];
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="padding: 10px; font-family: sans-serif; min-width: 200px;">
+                            <strong style="font-size: 15px; color: #1f2937;">${locationName}</strong><br>
+                            <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #e5e7eb;">
+                                <span style="color: #3b82f6; font-size: 12px; font-weight: 600;">${activity.time}</span><br>
+                                <span style="color: #4b5563; font-size: 13px;">${activity.activity}</span>
+                            </div>
+                        </div>
+                    `
+                });
+                infoWindow.open(map, marker);
+                
+                // 5. Highlight timeline item temporarily
+                const timelineItems = document.querySelectorAll('.timeline-item');
+                timelineItems.forEach(item => item.style.backgroundColor = '');
+                timelineItems[scheduleIndex].style.backgroundColor = '#dbeafe';
+                timelineItems[scheduleIndex].style.transition = 'background-color 0.3s';
+                
+                // Remove highlight after 2 seconds
+                setTimeout(() => {
+                    timelineItems[scheduleIndex].style.backgroundColor = '';
+                }, 2000);
+            }
+        }
+
+        // Make function globally accessible
+        window.highlightLocation = highlightLocation;
 
         // Make selectDay available globally
         window.selectDay = selectDay;
