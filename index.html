@@ -41,88 +41,6 @@
             color: #6b7280;
             font-size: 14px;
         }
-
-        .upload-notice {
-            background: #fef3c7;
-            border: 2px solid #fbbf24;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 24px;
-        }
-
-        .upload-notice-title {
-            font-weight: 700;
-            color: #92400e;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .upload-notice-text {
-            font-size: 14px;
-            color: #78350f;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-
-        .upload-area {
-            background: white;
-            border: 2px dashed #d97706;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 12px;
-        }
-
-        .upload-btn {
-            background: #f59e0b;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .upload-btn:hover {
-            background: #d97706;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .uploaded-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .uploaded-image-preview {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #d97706;
-        }
-
-        .uploaded-image-preview img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        .uploaded-image-label {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 4px;
-            font-size: 11px;
-            text-align: center;
-        }
         
         .day-selector {
             background: white;
@@ -324,6 +242,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
         }
         
         .route-item {
@@ -451,23 +371,7 @@
         <!-- Header -->
         <div class="header">
             <h1>🇰🇷 Korea Family Trip Dashboard</h1>
-            <p>Dec 19-27, 2024 • 9 Days • Real Map View</p>
-        </div>
-
-        <!-- Upload Notice -->
-        <div class="upload-notice">
-            <div class="upload-notice-title">🗺️ Add Your Map Screenshots!</div>
-            <div class="upload-notice-text">
-                Upload your 4 Google Maps screenshots to see them as backgrounds behind the route pins. The maps will automatically match to the correct days based on the regions shown.
-            </div>
-            <div class="upload-area">
-                <input type="file" id="mapUpload" class="file-input" accept="image/*" multiple>
-                <button class="upload-btn" onclick="document.getElementById('mapUpload').click()">📤 Upload Map Images</button>
-                <div style="font-size: 12px; color: #78350f; margin-top: 8px;">
-                    Upload 4 images: Ski Resort area, Wide Korea view, Incheon-Gangwon, Seoul detail
-                </div>
-            </div>
-            <div class="uploaded-images" id="uploadedImages"></div>
+            <p>Dec 19-27, 2024 • 9 Days • Real Google Maps View</p>
         </div>
         
         <!-- Day Selector -->
@@ -590,45 +494,20 @@
     </div>
 
     <script>
-        const uploadedMapImages = {
-            skiResort: null,
-            wideKorea: null,
-            incheonGangwon: null,
-            seoulDetail: null
+        // Map images that should be in the same folder as this HTML file
+        const mapImages = {
+            skiResort: 'map-ski-resort.jpg',
+            namiWide: 'map-nami-wide.jpg',
+            incheonGangwon: 'map-incheon-gangwon.jpg',
+            seoulDetail: 'map-seoul-detail.jpg'
         };
-
-        // Handle map image uploads
-        document.getElementById('mapUpload').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            const previewContainer = document.getElementById('uploadedImages');
-            
-            files.forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const mapKey = ['skiResort', 'wideKorea', 'incheonGangwon', 'seoulDetail'][index] || 'wideKorea';
-                    uploadedMapImages[mapKey] = event.target.result;
-                    
-                    const previewDiv = document.createElement('div');
-                    previewDiv.className = 'uploaded-image-preview';
-                    previewDiv.innerHTML = `
-                        <img src="${event.target.result}" alt="Map ${index + 1}">
-                        <div class="uploaded-image-label">Map ${index + 1}</div>
-                    `;
-                    previewContainer.appendChild(previewDiv);
-                    
-                    // Re-render current day with new map
-                    renderDay();
-                };
-                reader.readAsDataURL(file);
-            });
-        });
 
         const days = [
             {
                 day: 0,
                 date: "Dec 19",
                 title: "Departure",
-                mapType: null,
+                mapImage: null,
                 locations: [
                     { name: "KLIA", type: "airport", position: { x: 50, y: 50 } }
                 ],
@@ -640,7 +519,7 @@
                 day: 1,
                 date: "Dec 20",
                 title: "Arrival & Ski Resort",
-                mapType: 'incheonGangwon',
+                mapImage: mapImages.incheonGangwon,
                 locations: [
                     { name: "Incheon Airport", type: "airport", position: { x: 20, y: 55 } },
                     { name: "Ski Resort (Gangwon-do)", type: "resort", position: { x: 85, y: 25 } }
@@ -655,7 +534,7 @@
                 day: 2,
                 date: "Dec 21",
                 title: "Full Ski Day",
-                mapType: 'skiResort',
+                mapImage: mapImages.skiResort,
                 locations: [
                     { name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }
                 ],
@@ -667,7 +546,7 @@
                 day: 3,
                 date: "Dec 22",
                 title: "Resort Activities",
-                mapType: 'skiResort',
+                mapImage: mapImages.skiResort,
                 locations: [
                     { name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }
                 ],
@@ -679,7 +558,7 @@
                 day: 4,
                 date: "Dec 23",
                 title: "Nami Island → Seoul",
-                mapType: 'wideKorea',
+                mapImage: mapImages.namiWide,
                 locations: [
                     { name: "Ski Resort", type: "resort", position: { x: 85, y: 25 } },
                     { name: "Nami Island", type: "attraction", position: { x: 65, y: 32 } },
@@ -696,7 +575,7 @@
                 day: 5,
                 date: "Dec 24",
                 title: "Seoul Cultural Day",
-                mapType: 'seoulDetail',
+                mapImage: mapImages.seoulDetail,
                 locations: [
                     { name: "Anguk Airbnb", type: "home", position: { x: 52, y: 38 } },
                     { name: "Café Onion", type: "food", position: { x: 53, y: 39 } },
@@ -723,7 +602,7 @@
                 day: 6,
                 date: "Dec 25",
                 title: "Christmas Gangnam",
-                mapType: 'seoulDetail',
+                mapImage: mapImages.seoulDetail,
                 locations: [
                     { name: "Anguk Airbnb", type: "home", position: { x: 52, y: 35 } },
                     { name: "Namdaemun", type: "shopping", position: { x: 48, y: 48 } },
@@ -744,7 +623,7 @@
                 day: 7,
                 date: "Dec 26",
                 title: "Mosque + Hongdae",
-                mapType: 'seoulDetail',
+                mapImage: mapImages.seoulDetail,
                 locations: [
                     { name: "Anguk Airbnb", type: "home", position: { x: 55, y: 35 } },
                     { name: "Haneul Park", type: "attraction", position: { x: 22, y: 42 } },
@@ -765,7 +644,7 @@
                 day: 8,
                 date: "Dec 27",
                 title: "Departure",
-                mapType: 'incheonGangwon',
+                mapImage: mapImages.incheonGangwon,
                 locations: [
                     { name: "Anguk Airbnb", type: "home", position: { x: 55, y: 50 } },
                     { name: "Incheon Airport", type: "airport", position: { x: 20, y: 55 } }
@@ -838,10 +717,10 @@
             document.getElementById('statWalking').textContent = `${day.stats.walking}km`;
             document.getElementById('statTotal').textContent = day.stats.total;
 
-            // Set background map image if available
+            // Set background map image
             const mapContainer = document.getElementById('mapContainer');
-            if (day.mapType && uploadedMapImages[day.mapType]) {
-                mapContainer.style.backgroundImage = `url(${uploadedMapImages[day.mapType]})`;
+            if (day.mapImage) {
+                mapContainer.style.backgroundImage = `url('${day.mapImage}')`;
             } else {
                 mapContainer.style.backgroundImage = 'none';
                 mapContainer.style.backgroundColor = '#f3f4f6';
