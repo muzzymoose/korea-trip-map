@@ -371,7 +371,7 @@
         <!-- Header -->
         <div class="header">
             <h1>🇰🇷 Korea Family Trip Dashboard</h1>
-            <p>Dec 19-27, 2024 • 9 Days • Real Google Maps View</p>
+            <p>Dec 19-28, 2024 • 10 Days • Real Google Maps View</p>
         </div>
         
         <!-- Day Selector -->
@@ -384,7 +384,7 @@
             <!-- Map -->
             <div>
                 <div class="card">
-                    <h2 id="dayTitle">Day 0: Departure</h2>
+                    <h2 id="dayTitle">Day 1: Departure</h2>
                     <div class="map-container" id="mapContainer">
                         <svg class="map-svg" id="mapSvg"></svg>
                         <div id="locations"></div>
@@ -474,7 +474,7 @@
             <h2>Trip Overview</h2>
             <div class="overview-grid">
                 <div class="overview-card bg-blue-50">
-                    <div class="overview-value text-blue">9</div>
+                    <div class="overview-value text-blue">10</div>
                     <div class="overview-label">Days</div>
                 </div>
                 <div class="overview-card bg-green-50">
@@ -504,7 +504,7 @@
 
         const days = [
             {
-                day: 0,
+                day: 1,
                 date: "Dec 19",
                 title: "Departure",
                 mapImage: null,
@@ -516,7 +516,7 @@
                 region: "Malaysia → Korea"
             },
             {
-                day: 1,
+                day: 2,
                 date: "Dec 20",
                 title: "Arrival & Ski Resort",
                 mapImage: mapImages.incheonGangwon,
@@ -531,7 +531,7 @@
                 region: "Incheon → Gangwon-do"
             },
             {
-                day: 2,
+                day: 3,
                 date: "Dec 21",
                 title: "Full Ski Day",
                 mapImage: mapImages.skiResort,
@@ -543,7 +543,7 @@
                 region: "Ski Resort"
             },
             {
-                day: 3,
+                day: 4,
                 date: "Dec 22",
                 title: "Resort Activities",
                 mapImage: mapImages.skiResort,
@@ -555,7 +555,7 @@
                 region: "Ski Resort"
             },
             {
-                day: 4,
+                day: 5,
                 date: "Dec 23",
                 title: "Nami Island → Seoul",
                 mapImage: mapImages.namiWide,
@@ -572,7 +572,7 @@
                 region: "Gangwon → Gapyeong → Seoul"
             },
             {
-                day: 5,
+                day: 6,
                 date: "Dec 24",
                 title: "Seoul Cultural Day",
                 mapImage: mapImages.seoulDetail,
@@ -599,7 +599,7 @@
                 region: "Central Seoul (Jongno-gu)"
             },
             {
-                day: 6,
+                day: 7,
                 date: "Dec 25",
                 title: "Christmas Gangnam",
                 mapImage: mapImages.seoulDetail,
@@ -620,29 +620,48 @@
                 region: "Central → Gangnam → Jamsil"
             },
             {
-                day: 7,
+                day: 8,
                 date: "Dec 26",
                 title: "Mosque + Hongdae",
                 mapImage: mapImages.seoulDetail,
                 locations: [
                     { name: "Anguk Airbnb", type: "home", position: { x: 55, y: 35 } },
-                    { name: "Haneul Park", type: "attraction", position: { x: 22, y: 42 } },
-                    { name: "Itaewon Mosque", type: "attraction", position: { x: 48, y: 58 } },
                     { name: "Hongdae", type: "shopping", position: { x: 28, y: 48 } },
+                    { name: "Itaewon Mosque", type: "attraction", position: { x: 48, y: 58 } },
                     { name: "Dongdaemun", type: "shopping", position: { x: 65, y: 40 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway", duration: "40m" },
-                    { from: 1, to: 2, type: "subway", duration: "35m" },
+                    { from: 0, to: 1, type: "subway", duration: "30m" },
+                    { from: 1, to: 2, type: "subway", duration: "20m" },
                     { from: 2, to: 3, type: "car", duration: "20m" },
-                    { from: 3, to: 4, type: "car", duration: "20m" }
+                    { from: 3, to: 0, type: "subway", duration: "10m" }
                 ],
-                stats: { driving: 40, subway: 85, walking: 3, total: "2.5h travel" },
+                stats: { driving: 20, subway: 60, walking: 2, total: "1.5h travel" },
                 region: "Multi-district Seoul"
             },
             {
-                day: 8,
+                day: 9,
                 date: "Dec 27",
+                title: "Free & Easy Shopping",
+                mapImage: mapImages.seoulDetail,
+                locations: [
+                    { name: "Anguk Airbnb", type: "home", position: { x: 55, y: 35 } },
+                    { name: "Myeongdong", type: "shopping", position: { x: 50, y: 50 } },
+                    { name: "Dongdaemun", type: "shopping", position: { x: 65, y: 40 } },
+                    { name: "Gangnam COEX", type: "shopping", position: { x: 72, y: 70 } }
+                ],
+                routes: [
+                    { from: 0, to: 1, type: "subway", duration: "15m" },
+                    { from: 1, to: 2, type: "subway", duration: "15m" },
+                    { from: 2, to: 3, type: "subway", duration: "30m" },
+                    { from: 3, to: 0, type: "subway", duration: "35m" }
+                ],
+                stats: { driving: 0, subway: 95, walking: 3, total: "Free shopping day!" },
+                region: "Seoul Shopping Districts"
+            },
+            {
+                day: 10,
+                date: "Dec 28",
                 title: "Departure",
                 mapImage: mapImages.incheonGangwon,
                 locations: [
