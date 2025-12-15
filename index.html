@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Korea Trip Map Dashboard</title>
+    <title>Korea Trip - Full Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -18,10 +14,7 @@
             min-height: 100vh;
         }
         
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
         
         .header {
             background: white;
@@ -31,16 +24,8 @@
             margin-bottom: 24px;
         }
         
-        .header h1 {
-            font-size: 28px;
-            color: #1f2937;
-            margin-bottom: 8px;
-        }
-        
-        .header p {
-            color: #6b7280;
-            font-size: 14px;
-        }
+        .header h1 { font-size: 28px; color: #1f2937; margin-bottom: 8px; }
+        .header p { color: #6b7280; font-size: 14px; }
         
         .day-selector {
             background: white;
@@ -49,14 +34,9 @@
             padding: 16px;
             margin-bottom: 24px;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
         
-        .day-buttons {
-            display: flex;
-            gap: 8px;
-            min-width: max-content;
-        }
+        .day-buttons { display: flex; gap: 8px; min-width: max-content; }
         
         .day-btn {
             padding: 12px 16px;
@@ -77,14 +57,8 @@
             box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
         }
         
-        .day-label {
-            font-size: 10px;
-            opacity: 0.75;
-        }
-        
-        .day-date {
-            font-size: 14px;
-        }
+        .day-label { font-size: 10px; opacity: 0.75; }
+        .day-date { font-size: 14px; }
         
         .main-content {
             display: grid;
@@ -93,9 +67,7 @@
         }
         
         @media (min-width: 1024px) {
-            .main-content {
-                grid-template-columns: 2fr 1fr;
-            }
+            .main-content { grid-template-columns: 1fr 1fr; }
         }
         
         .card {
@@ -105,18 +77,8 @@
             padding: 24px;
         }
         
-        .card h2, .card h3 {
-            color: #1f2937;
-            margin-bottom: 16px;
-        }
-        
-        .card h2 {
-            font-size: 20px;
-        }
-        
-        .card h3 {
-            font-size: 18px;
-        }
+        .card h2 { color: #1f2937; margin-bottom: 16px; font-size: 20px; }
+        .card h3 { color: #1f2937; margin-bottom: 16px; font-size: 18px; }
         
         .map-container {
             background-color: #f3f4f6;
@@ -127,7 +89,7 @@
             border: 2px solid #e5e7eb;
             padding: 16px;
             position: relative;
-            height: 500px;
+            height: 400px;
             margin-bottom: 16px;
         }
         
@@ -143,200 +105,127 @@
             position: absolute;
             transform: translate(-50%, -50%);
             z-index: 10;
-            animation: markerPop 0.3s ease-out;
-        }
-
-        @keyframes markerPop {
-            0% { transform: translate(-50%, -50%) scale(0); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
         }
         
         .marker-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
-            border: 3px solid white;
-        }
-        
-        .marker-icon::before {
-            content: '📍';
-            font-size: 20px;
-        }
-        
-        .marker-label {
-            position: absolute;
-            top: 100%;
-            margin-top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            background: rgba(255,255,255,0.95);
-            padding: 6px 12px;
-            border-radius: 999px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            font-size: 11px;
-            font-weight: 700;
-            border: 2px solid #e5e7eb;
-        }
-        
-        .region-label {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background: rgba(255,255,255,0.95);
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            z-index: 5;
-            border: 2px solid #e5e7eb;
-        }
-        
-        .region-label-title {
-            font-size: 10px;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-        
-        .region-label-text {
-            font-weight: 700;
-            color: #1f2937;
-        }
-        
-        .stats-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-        }
-        
-        .stat-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        
-        .stat-value {
-            font-weight: 600;
-        }
-        
-        .stat-divider {
-            border-top: 1px solid #e5e7eb;
-            padding-top: 12px;
-            margin-top: 12px;
-        }
-        
-        .route-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .route-item {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .route-number {
             width: 32px;
             height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 2px solid white;
+        }
+        
+        .marker-icon::before { content: '📍'; font-size: 16px; }
+        
+        .marker-label {
+            position: absolute;
+            top: 100%;
+            margin-top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            background: rgba(255,255,255,0.95);
+            padding: 4px 10px;
+            border-radius: 999px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 10px;
             font-weight: 700;
-            font-size: 14px;
-            flex-shrink: 0;
         }
         
-        .route-details {
-            flex-grow: 1;
+        .region-label {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255,255,255,0.95);
+            padding: 8px 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 5;
         }
         
-        .route-name {
-            font-weight: 600;
-            color: #1f2937;
-        }
-        
-        .route-type {
-            font-size: 12px;
-            color: #6b7280;
-            text-transform: capitalize;
-        }
-        
-        .route-transport {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 4px;
-            font-size: 12px;
-            color: #6b7280;
-        }
-        
-        .legend-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        
-        .overview-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        
-        @media (min-width: 768px) {
-            .overview-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        .overview-card {
-            text-align: center;
-            padding: 16px;
+        .region-label-title { font-size: 9px; color: #6b7280; }
+        .region-label-text { font-weight: 700; color: #1f2937; font-size: 12px; }
+
+        .stats-row { display: flex; gap: 12px; margin-bottom: 16px; }
+        .stat-card {
+            flex: 1;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 12px;
             border-radius: 8px;
+            text-align: center;
         }
-        
-        .overview-value {
-            font-size: 24px;
+        .stat-icon { font-size: 20px; margin-bottom: 4px; }
+        .stat-value { font-weight: 700; font-size: 18px; color: #1f2937; }
+        .stat-label { font-size: 11px; color: #6b7280; margin-top: 2px; }
+
+        .timeline { max-height: 600px; overflow-y: auto; }
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 23px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #e5e7eb;
+        }
+        .timeline-item:last-child::before { display: none; }
+        .timeline-time { flex-shrink: 0; width: 60px; padding-top: 4px; }
+        .time-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .timeline-marker {
+            flex-shrink: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3b82f6;
+            margin-top: 8px;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #3b82f6;
+            z-index: 1;
+        }
+        .timeline-content {
+            flex: 1;
+            background: #f9fafb;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+        }
+        .timeline-location {
             font-weight: 700;
+            color: #1f2937;
             margin-bottom: 4px;
+            font-size: 14px;
         }
-        
-        .overview-label {
-            font-size: 12px;
+        .timeline-activity { color: #4b5563; font-size: 13px; line-height: 1.5; }
+        .timeline-transport {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            padding: 4px 10px;
+            background: white;
+            border-radius: 6px;
+            font-size: 11px;
             color: #6b7280;
+            border: 1px solid #e5e7eb;
         }
-        
+
         .bg-blue { background: #3b82f6; }
         .bg-purple { background: #a855f7; }
         .bg-green { background: #22c55e; }
@@ -344,157 +233,77 @@
         .bg-pink { background: #ec4899; }
         .bg-orange { background: #f97316; }
         
-        .bg-blue-50 { background: #eff6ff; }
-        .bg-green-50 { background: #f0fdf4; }
-        .bg-yellow-50 { background: #fefce8; }
-        .bg-purple-50 { background: #faf5ff; }
-        
-        .text-blue { color: #3b82f6; }
-        .text-green { color: #22c55e; }
-        .text-yellow { color: #eab308; }
-        .text-purple { color: #a855f7; }
-        
-        .route-line {
-            stroke-width: 4;
-            opacity: 0.8;
-            fill: none;
-        }
-        
+        .route-line { stroke-width: 3; opacity: 0.7; fill: none; }
         .route-car { stroke: #3b82f6; }
         .route-subway { stroke: #22c55e; }
         .route-walk { stroke: #eab308; stroke-dasharray: 5,5; }
         .route-bus { stroke: #a855f7; }
+
+        .legend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 16px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+        .legend-color { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <h1>🇰🇷 Korea Family Trip Dashboard</h1>
-            <p>Dec 19-28, 2024 • 10 Days • Real Google Maps View</p>
+            <h1>🇰🇷 Korea Family Trip - Full Schedule</h1>
+            <p>Dec 19-28, 2024 • 10 Days</p>
         </div>
         
-        <!-- Day Selector -->
         <div class="day-selector">
             <div class="day-buttons" id="dayButtons"></div>
         </div>
         
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Map -->
             <div>
                 <div class="card">
                     <h2 id="dayTitle">Day 1: Departure</h2>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">🚗</div>
+                            <div class="stat-value" id="statDriving">0km</div>
+                            <div class="stat-label">Driving</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🚇</div>
+                            <div class="stat-value" id="statSubway">0km</div>
+                            <div class="stat-label">Subway</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🚶</div>
+                            <div class="stat-value" id="statWalking">0km</div>
+                            <div class="stat-label">Walking</div>
+                        </div>
+                    </div>
                     <div class="map-container" id="mapContainer">
                         <svg class="map-svg" id="mapSvg"></svg>
                         <div id="locations"></div>
                         <div class="region-label">
                             <div class="region-label-title">Region</div>
-                            <div class="region-label-text" id="regionText">Malaysia → Korea</div>
+                            <div class="region-label-text" id="regionText">Malaysia</div>
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Sidebar -->
-            <div>
-                <!-- Stats -->
-                <div class="card" style="margin-bottom: 24px;">
-                    <h3>⏱️ Travel Stats</h3>
-                    <div class="stats-grid">
-                        <div class="stat-row">
-                            <div class="stat-label">
-                                <span>🚗</span>
-                                <span>Driving</span>
-                            </div>
-                            <span class="stat-value" id="statDriving">0km</span>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-label">
-                                <span>🚇</span>
-                                <span>Subway</span>
-                            </div>
-                            <span class="stat-value" id="statSubway">0m</span>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-label">
-                                <span>🚶</span>
-                                <span>Walking</span>
-                            </div>
-                            <span class="stat-value" id="statWalking">0km</span>
-                        </div>
-                        <div class="stat-row stat-divider">
-                            <span style="font-weight: 600;">Total Travel</span>
-                            <span class="stat-value text-blue" id="statTotal">Flight</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Route Details -->
-                <div class="card" style="margin-bottom: 24px;">
-                    <h3>Route Details</h3>
-                    <div class="route-list" id="routeList"></div>
-                </div>
-                
-                <!-- Legend -->
-                <div class="card">
-                    <h3>Legend</h3>
                     <div class="legend-grid">
-                        <div class="legend-item">
-                            <div class="legend-color bg-blue"></div>
-                            <span>Home/Accommodation</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color bg-purple"></div>
-                            <span>Airport</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color bg-green"></div>
-                            <span>Resort</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color bg-yellow"></div>
-                            <span>Attraction</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color bg-pink"></div>
-                            <span>Shopping</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color bg-orange"></div>
-                            <span>Food/Café</span>
-                        </div>
+                        <div class="legend-item"><div class="legend-color bg-blue"></div><span>Home</span></div>
+                        <div class="legend-item"><div class="legend-color bg-purple"></div><span>Airport</span></div>
+                        <div class="legend-item"><div class="legend-color bg-green"></div><span>Resort</span></div>
+                        <div class="legend-item"><div class="legend-color bg-yellow"></div><span>Attraction</span></div>
+                        <div class="legend-item"><div class="legend-color bg-pink"></div><span>Shopping</span></div>
+                        <div class="legend-item"><div class="legend-color bg-orange"></div><span>Food</span></div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Trip Overview -->
-        <div class="card" style="margin-top: 24px;">
-            <h2>Trip Overview</h2>
-            <div class="overview-grid">
-                <div class="overview-card bg-blue-50">
-                    <div class="overview-value text-blue">10</div>
-                    <div class="overview-label">Days</div>
-                </div>
-                <div class="overview-card bg-green-50">
-                    <div class="overview-value text-green">~450km</div>
-                    <div class="overview-label">Total Driving</div>
-                </div>
-                <div class="overview-card bg-yellow-50">
-                    <div class="overview-value text-yellow">~10km</div>
-                    <div class="overview-label">Total Walking</div>
-                </div>
-                <div class="overview-card bg-purple-50">
-                    <div class="overview-value text-purple">3h</div>
-                    <div class="overview-label">Total Subway</div>
+            <div>
+                <div class="card">
+                    <h3>📅 Daily Schedule</h3>
+                    <div class="timeline" id="timeline"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Map images that should be in the same folder as this HTML file
         const mapImages = {
             skiResort: 'map-ski-resort.png',
             namiWide: 'map-nami-wide.png',
@@ -502,292 +311,276 @@
             seoulDetail: 'map-seoul-detail.png'
         };
 
-        const days = [
+        const scheduleData = [
             {
-                day: 0,
-                date: "Dec 19",
-                title: "Departure",
-                mapImage: null,
-                locations: [
-                    { name: "KLIA", type: "airport", position: { x: 50, y: 50 } }
-                ],
-                routes: [],
-                stats: { driving: 0, subway: 0, walking: 0, total: "Flight" },
-                region: "Malaysia → Korea"
+                day: 0, date: "Dec 19", title: "Departure", mapImage: null,
+                locations: [{ name: "KLIA", type: "airport", position: { x: 50, y: 50 } }],
+                routes: [], stats: { driving: 0, subway: 0, walking: 0 },
+                schedule: [{ time: "Evening", location: "KLIA", activity: "Depart to Incheon", transport: null }]
             },
             {
-                day: 1,
-                date: "Dec 20",
-                title: "Arrival & Ski Resort",
-                mapImage: mapImages.incheonGangwon,
+                day: 1, date: "Dec 20", title: "Arrival & Ski Resort", mapImage: mapImages.incheonGangwon,
                 locations: [
-                    { name: "Incheon Airport", type: "airport", position: { x: 15, y: 55 } },
-                    { name: "Ski Resort (Gangwon-do)", type: "resort", position: { x: 85, y: 25 } }
+                    { name: "Incheon", type: "airport", position: { x: 15, y: 55 } },
+                    { name: "Ski Resort", type: "resort", position: { x: 85, y: 25 } }
                 ],
-                routes: [
-                    { from: 0, to: 1, type: "car", duration: "2.5h" }
-                ],
-                stats: { driving: 150, subway: 0, walking: 1, total: "2.5h drive" },
-                region: "Incheon → Gangwon-do"
+                routes: [{ from: 0, to: 1, type: "car" }],
+                stats: { driving: 150, subway: 0, walking: 1 },
+                schedule: [
+                    { time: "6:30", location: "Incheon Airport", activity: "Arrival", transport: null },
+                    { time: "7:30", location: "Airport", activity: "Meet driver", transport: "🚗 2.5h" },
+                    { time: "10:00", location: "Ski Resort", activity: "Arrive", transport: null },
+                    { time: "11:00", location: "Hotel", activity: "Check-in", transport: "🚶" },
+                    { time: "13:00", location: "Restaurant", activity: "Lunch", transport: "🚶" },
+                    { time: "15:00", location: "Resort", activity: "Explore", transport: "🚶" },
+                    { time: "16:00", location: "Ski Rental", activity: "Equipment sizing", transport: "🚶" },
+                    { time: "18:00", location: "Restaurant", activity: "Dinner", transport: "🚶" },
+                    { time: "20:00", location: "Room", activity: "Rest", transport: null }
+                ]
             },
             {
-                day: 2,
-                date: "Dec 21",
-                title: "Full Ski Day",
-                mapImage: mapImages.skiResort,
-                locations: [
-                    { name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }
-                ],
-                routes: [],
-                stats: { driving: 0, subway: 0, walking: 2, total: "Resort only" },
-                region: "Ski Resort"
+                day: 2, date: "Dec 21", title: "Full Ski Day", mapImage: mapImages.skiResort,
+                locations: [{ name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }],
+                routes: [], stats: { driving: 0, subway: 0, walking: 2 },
+                schedule: [
+                    { time: "8:00", location: "Restaurant", activity: "Breakfast", transport: "🚶" },
+                    { time: "9:00", location: "Slopes", activity: "Ski lesson (2hrs)", transport: null },
+                    { time: "10:30", location: "Slopes", activity: "Kids group lesson", transport: null },
+                    { time: "12:00", location: "Slope Restaurant", activity: "Lunch", transport: "🚶" },
+                    { time: "13:30", location: "Slopes", activity: "Continue skiing", transport: null },
+                    { time: "15:00", location: "Slopes", activity: "Family skiing", transport: "🚶" },
+                    { time: "16:30", location: "Café", activity: "Hot chocolate", transport: "🚶" },
+                    { time: "18:30", location: "Restaurant", activity: "Dinner", transport: "🚶" },
+                    { time: "20:00", location: "Room", activity: "Rest", transport: null }
+                ]
             },
             {
-                day: 3,
-                date: "Dec 22",
-                title: "Resort Activities",
-                mapImage: mapImages.skiResort,
-                locations: [
-                    { name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }
-                ],
-                routes: [],
-                stats: { driving: 0, subway: 0, walking: 2, total: "Resort only" },
-                region: "Ski Resort"
+                day: 3, date: "Dec 22", title: "Resort Activities", mapImage: mapImages.skiResort,
+                locations: [{ name: "Ski Resort", type: "resort", position: { x: 50, y: 50 } }],
+                routes: [], stats: { driving: 0, subway: 0, walking: 2 },
+                schedule: [
+                    { time: "8:00", location: "Restaurant", activity: "Breakfast", transport: "🚶" },
+                    { time: "9:30", location: "Gondola", activity: "Gondola ride", transport: null },
+                    { time: "10:30", location: "Mountain", activity: "Winter photos", transport: "🚶" },
+                    { time: "12:00", location: "Restaurant", activity: "Lunch", transport: "🚶" },
+                    { time: "14:00", location: "Sheep Area", activity: "Sheep feeding", transport: "🚶" },
+                    { time: "15:30", location: "Trails", activity: "Scenic walk", transport: "🚶" },
+                    { time: "18:00", location: "Restaurant", activity: "Dinner", transport: "🚶" },
+                    { time: "20:00", location: "Room", activity: "Pack", transport: null }
+                ]
             },
             {
-                day: 4,
-                date: "Dec 23",
-                title: "Nami Island → Seoul",
-                mapImage: mapImages.namiWide,
+                day: 4, date: "Dec 23", title: "Nami Island → Seoul", mapImage: mapImages.namiWide,
                 locations: [
                     { name: "Ski Resort", type: "resort", position: { x: 85, y: 25 } },
                     { name: "Nami Island", type: "attraction", position: { x: 65, y: 32 } },
-                    { name: "Seoul Airbnb (Anguk)", type: "home", position: { x: 10, y: 70 } }
+                    { name: "Seoul Airbnb", type: "home", position: { x: 10, y: 70 } }
                 ],
-                routes: [
-                    { from: 0, to: 1, type: "car", duration: "1.5-2h" },
-                    { from: 1, to: 2, type: "car", duration: "1.5-2h" }
-                ],
-                stats: { driving: 200, subway: 0, walking: 3, total: "4h drive + 4h Nami" },
-                region: "Gangwon → Gapyeong → Seoul"
+                routes: [{ from: 0, to: 1, type: "car" }, { from: 1, to: 2, type: "car" }],
+                stats: { driving: 200, subway: 0, walking: 3 },
+                schedule: [
+                    { time: "9:00", location: "Ski Resort", activity: "Check-out", transport: "🚗 1.5h" },
+                    { time: "11:30", location: "Nami Ferry", activity: "Arrive", transport: "⛴️ 5min" },
+                    { time: "12:00", location: "Island", activity: "Lunch", transport: "🚶" },
+                    { time: "13:00", location: "Nami", activity: "Trees - bikes - photos", transport: "🚶🚴" },
+                    { time: "14:30", location: "Playground", activity: "Kids & animals", transport: "🚶" },
+                    { time: "15:30", location: "Ferry", activity: "Return", transport: "⛴️ 5min" },
+                    { time: "16:00", location: "Parking", activity: "Depart Seoul", transport: "🚗 1.5h" },
+                    { time: "17:30", location: "Seoul Airbnb", activity: "Check-in", transport: "🚶 10min" },
+                    { time: "18:30", location: "Nearby", activity: "Dinner", transport: "🚶" },
+                    { time: "20:00", location: "Airbnb", activity: "Rest", transport: null }
+                ]
             },
             {
-                day: 5,
-                date: "Dec 24",
-                title: "Seoul Cultural Day",
-                mapImage: mapImages.seoulDetail,
+                day: 5, date: "Dec 24", title: "Seoul Cultural Day", mapImage: mapImages.seoulDetail,
                 locations: [
-                    { name: "Anguk Airbnb", type: "home", position: { x: 52, y: 38 } },
-                    { name: "Café Onion", type: "food", position: { x: 53, y: 39 } },
-                    { name: "Gyeongbokgung", type: "attraction", position: { x: 48, y: 40 } },
+                    { name: "Airbnb", type: "home", position: { x: 52, y: 38 } },
+                    { name: "Onion", type: "food", position: { x: 53, y: 39 } },
+                    { name: "Palace", type: "attraction", position: { x: 48, y: 40 } },
                     { name: "Bukchon", type: "attraction", position: { x: 54, y: 41 } },
                     { name: "Insadong", type: "shopping", position: { x: 56, y: 43 } },
                     { name: "Ikseondong", type: "attraction", position: { x: 58, y: 45 } },
                     { name: "Myeongdong", type: "shopping", position: { x: 52, y: 52 } },
-                    { name: "Cheonggyecheon", type: "attraction", position: { x: 55, y: 54 } }
+                    { name: "Stream", type: "attraction", position: { x: 55, y: 54 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "walk", duration: "2m" },
-                    { from: 1, to: 2, type: "walk", duration: "15m" },
-                    { from: 2, to: 3, type: "walk", duration: "10m" },
-                    { from: 3, to: 4, type: "walk", duration: "10m" },
-                    { from: 4, to: 5, type: "walk", duration: "12m" },
-                    { from: 5, to: 6, type: "subway", duration: "12m" },
-                    { from: 6, to: 7, type: "walk", duration: "5m" }
+                    { from: 0, to: 1, type: "walk" }, { from: 1, to: 2, type: "walk" },
+                    { from: 2, to: 3, type: "walk" }, { from: 3, to: 4, type: "walk" },
+                    { from: 4, to: 5, type: "walk" }, { from: 5, to: 6, type: "subway" },
+                    { from: 6, to: 7, type: "walk" }
                 ],
-                stats: { driving: 0, subway: 2, walking: 4, total: "Walking day!" },
-                region: "Central Seoul (Jongno-gu)"
+                stats: { driving: 0, subway: 2, walking: 4 },
+                schedule: [
+                    { time: "8:00", location: "Café Onion", activity: "Breakfast", transport: "🚶 2min" },
+                    { time: "9:15", location: "Gyeongbokgung", activity: "Royal Guard", transport: "🚶 15min" },
+                    { time: "11:00", location: "Bukchon", activity: "Hanok photos", transport: "🚶 10min" },
+                    { time: "12:30", location: "Insadong", activity: "Lunch + Ssamziegil", transport: null },
+                    { time: "13:30", location: "Insadong", activity: "Tea - crafts", transport: "🚶 12min" },
+                    { time: "14:30", location: "Ikseondong", activity: "Trendy cafés", transport: "🚇 12min" },
+                    { time: "16:30", location: "Myeongdong", activity: "Shopping - BTS", transport: null },
+                    { time: "18:30", location: "Myeongdong", activity: "Halal dinner", transport: "🚶 5min" },
+                    { time: "19:30", location: "Cheonggyecheon", activity: "Lanterns", transport: "🚇 15min" },
+                    { time: "21:00", location: "Airbnb", activity: "Rest", transport: null }
+                ]
             },
             {
-                day: 6,
-                date: "Dec 25",
-                title: "Christmas Gangnam",
-                mapImage: mapImages.seoulDetail,
+                day: 6, date: "Dec 25", title: "Christmas Gangnam", mapImage: mapImages.seoulDetail,
                 locations: [
-                    { name: "Anguk Airbnb", type: "home", position: { x: 52, y: 35 } },
+                    { name: "Airbnb", type: "home", position: { x: 52, y: 35 } },
                     { name: "Namdaemun", type: "shopping", position: { x: 48, y: 48 } },
                     { name: "Myeongdong", type: "shopping", position: { x: 50, y: 50 } },
-                    { name: "COEX Gangnam", type: "shopping", position: { x: 72, y: 70 } },
+                    { name: "COEX", type: "shopping", position: { x: 72, y: 70 } },
                     { name: "Jamsil", type: "attraction", position: { x: 78, y: 65 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway", duration: "20m" },
-                    { from: 1, to: 2, type: "walk", duration: "10m" },
-                    { from: 2, to: 3, type: "subway", duration: "35m" },
-                    { from: 3, to: 4, type: "subway", duration: "5m" }
+                    { from: 0, to: 1, type: "subway" }, { from: 1, to: 2, type: "walk" },
+                    { from: 2, to: 3, type: "subway" }, { from: 3, to: 4, type: "subway" }
                 ],
-                stats: { driving: 0, subway: 95, walking: 2, total: "1.5h subway" },
-                region: "Central → Gangnam → Jamsil"
+                stats: { driving: 0, subway: 95, walking: 2 },
+                schedule: [
+                    { time: "9:00", location: "Namdaemun", activity: "Traditional market", transport: "🚇 20min" },
+                    { time: "11:00", location: "Myeongdong", activity: "Kampungku lunch", transport: "🚶 10min" },
+                    { time: "12:30", location: "Travel", activity: "To Gangnam", transport: "🚇 35min" },
+                    { time: "13:30", location: "COEX", activity: "Starfield Library", transport: null },
+                    { time: "15:00", location: "COEX", activity: "Aquarium (optional)", transport: "🚇 5min" },
+                    { time: "16:30", location: "Jamsil", activity: "Travel to Jamsil", transport: null },
+                    { time: "17:00", location: "Lotte World", activity: "Christmas Market", transport: "🚶 5min" },
+                    { time: "18:30", location: "Jamsil", activity: "Dinner", transport: "🚇 35min" },
+                    { time: "20:00", location: "Airbnb", activity: "Rest", transport: null }
+                ]
             },
             {
-                day: 7,
-                date: "Dec 26",
-                title: "Mosque + Hongdae",
-                mapImage: mapImages.seoulDetail,
+                day: 7, date: "Dec 26", title: "Mosque + Hongdae", mapImage: mapImages.seoulDetail,
                 locations: [
-                    { name: "Anguk Airbnb", type: "home", position: { x: 55, y: 35 } },
+                    { name: "Airbnb", type: "home", position: { x: 55, y: 35 } },
                     { name: "Hongdae", type: "shopping", position: { x: 28, y: 48 } },
-                    { name: "Itaewon Mosque", type: "attraction", position: { x: 48, y: 58 } },
+                    { name: "Itaewon", type: "attraction", position: { x: 48, y: 58 } },
                     { name: "Dongdaemun", type: "shopping", position: { x: 65, y: 40 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway", duration: "30m" },
-                    { from: 1, to: 2, type: "subway", duration: "20m" },
-                    { from: 2, to: 3, type: "car", duration: "20m" },
-                    { from: 3, to: 0, type: "subway", duration: "10m" }
+                    { from: 0, to: 1, type: "subway" }, { from: 1, to: 2, type: "subway" },
+                    { from: 2, to: 3, type: "car" }
                 ],
-                stats: { driving: 20, subway: 60, walking: 2, total: "1.5h travel" },
-                region: "Multi-district Seoul"
+                stats: { driving: 20, subway: 60, walking: 2 },
+                schedule: [
+                    { time: "9:00", location: "Travel", activity: "To Hongdae", transport: "🚇 30min" },
+                    { time: "9:30", location: "Hongdae", activity: "Rolling Dice shop", transport: null },
+                    { time: "10:30", location: "Hongdae", activity: "Nike Style custom", transport: null },
+                    { time: "11:30", location: "Hongdae", activity: "Street performances", transport: "🚇 20min" },
+                    { time: "12:00", location: "Travel", activity: "To Itaewon", transport: null },
+                    { time: "12:30", location: "Seoul Mosque", activity: "Friday Prayers", transport: null },
+                    { time: "13:30", location: "Itaewon", activity: "Halal lunch", transport: "🚗 20min" },
+                    { time: "15:00", location: "Dongdaemun", activity: "Shopping", transport: null },
+                    { time: "19:00", location: "Dongdaemun", activity: "Dinner", transport: null },
+                    { time: "21:00", location: "Dongdaemun", activity: "Nyunyu Wholesale", transport: "🚇 10min" },
+                    { time: "22:30", location: "Airbnb", activity: "Rest", transport: null }
+                ]
             },
             {
-                day: 8,
-                date: "Dec 27",
-                title: "Free & Easy Shopping",
-                mapImage: mapImages.seoulDetail,
+                day: 8, date: "Dec 27", title: "Free & Easy Shopping", mapImage: mapImages.seoulDetail,
                 locations: [
-                    { name: "Anguk Airbnb", type: "home", position: { x: 55, y: 35 } },
+                    { name: "Airbnb", type: "home", position: { x: 55, y: 35 } },
                     { name: "Myeongdong", type: "shopping", position: { x: 50, y: 50 } },
                     { name: "Dongdaemun", type: "shopping", position: { x: 65, y: 40 } },
-                    { name: "Gangnam COEX", type: "shopping", position: { x: 72, y: 70 } }
+                    { name: "COEX", type: "shopping", position: { x: 72, y: 70 } }
                 ],
                 routes: [
-                    { from: 0, to: 1, type: "subway", duration: "15m" },
-                    { from: 1, to: 2, type: "subway", duration: "15m" },
-                    { from: 2, to: 3, type: "subway", duration: "30m" },
-                    { from: 3, to: 0, type: "subway", duration: "35m" }
+                    { from: 0, to: 1, type: "subway" }, { from: 1, to: 2, type: "subway" },
+                    { from: 2, to: 3, type: "subway" }
                 ],
-                stats: { driving: 0, subway: 95, walking: 3, total: "Free shopping day!" },
-                region: "Seoul Shopping Districts"
+                stats: { driving: 0, subway: 95, walking: 3 },
+                schedule: [
+                    { time: "9:00", location: "Myeongdong", activity: "Free shopping", transport: "🚇 15min" },
+                    { time: "12:00", location: "Myeongdong", activity: "Lunch", transport: "🚇 15min" },
+                    { time: "13:00", location: "Dongdaemun", activity: "Wholesale markets", transport: "🚇 30min" },
+                    { time: "16:00", location: "COEX", activity: "Final shopping", transport: null },
+                    { time: "19:00", location: "Gangnam", activity: "Dinner", transport: "🚇 35min" },
+                    { time: "20:30", location: "Airbnb", activity: "Pack", transport: null }
+                ]
             },
             {
-                day: 9,
-                date: "Dec 28",
-                title: "Departure",
-                mapImage: mapImages.incheonGangwon,
+                day: 9, date: "Dec 28", title: "Departure", mapImage: mapImages.incheonGangwon,
                 locations: [
-                    { name: "Anguk Airbnb", type: "home", position: { x: 30, y: 55 } },
-                    { name: "Incheon Airport", type: "airport", position: { x: 15, y: 55 } }
+                    { name: "Airbnb", type: "home", position: { x: 35, y: 55 } },
+                    { name: "Incheon", type: "airport", position: { x: 15, y: 55 } }
                 ],
-                routes: [
-                    { from: 0, to: 1, type: "bus", duration: "1.5h" }
-                ],
-                stats: { driving: 60, subway: 0, walking: 0, total: "1.5h bus" },
-                region: "Seoul → Incheon"
+                routes: [{ from: 0, to: 1, type: "bus" }],
+                stats: { driving: 60, subway: 0, walking: 0 },
+                schedule: [
+                    { time: "6:00", location: "Airbnb", activity: "Wake up", transport: null },
+                    { time: "7:00", location: "Airbnb", activity: "Check-out", transport: "🚌 1.5h" },
+                    { time: "7:15", location: "Anguk Stn", activity: "Bus 6011", transport: null },
+                    { time: "8:45", location: "Airport", activity: "Arrive", transport: "🚶" },
+                    { time: "9:00", location: "Check-in", activity: "Bag drop", transport: "🚶" },
+                    { time: "10:00", location: "Immigration", activity: "Security", transport: "🚶" },
+                    { time: "10:30", location: "Duty Free", activity: "Shopping", transport: "🚶" },
+                    { time: "11:00", location: "Gate", activity: "Flight to KLIA", transport: null }
+                ]
             }
         ];
 
         let currentDay = 0;
-
-        const getLocationColor = (type) => {
-            const colors = {
-                home: "bg-blue",
-                airport: "bg-purple",
-                resort: "bg-green",
-                attraction: "bg-yellow",
-                shopping: "bg-pink",
-                food: "bg-orange"
-            };
-            return colors[type] || "bg-gray-500";
+        const typeColors = {
+            home: "bg-blue", airport: "bg-purple", resort: "bg-green",
+            attraction: "bg-yellow", shopping: "bg-pink", food: "bg-orange"
+        };
+        const routeColors = {
+            car: "route-car", subway: "route-subway", walk: "route-walk", bus: "route-bus"
         };
 
-        const getRouteColor = (type) => {
-            const colors = {
-                car: "route-car",
-                subway: "route-subway",
-                walk: "route-walk",
-                bus: "route-bus"
-            };
-            return colors[type] || "route-car";
-        };
-
-        const getTransportIcon = (type) => {
-            const icons = {
-                car: '🚗',
-                subway: '🚇',
-                walk: '🚶',
-                bus: '🚌'
-            };
-            return icons[type] || '🚗';
-        };
-
-        function renderDayButtons() {
-            const container = document.getElementById('dayButtons');
-            container.innerHTML = days.map(day => `
-                <button class="day-btn ${day.day === currentDay ? 'active' : ''}" onclick="selectDay(${day.day})">
-                    <div class="day-label">Day ${day.day + 1}</div>
-                    <div class="day-date">${day.date}</div>
-                </button>
-            `).join('');
+        function renderButtons() {
+            document.getElementById('dayButtons').innerHTML = scheduleData.map(d => 
+                `<button class="day-btn ${d.day === currentDay ? 'active' : ''}" onclick="selectDay(${d.day})">
+                    <div class="day-label">Day ${d.day + 1}</div>
+                    <div class="day-date">${d.date}</div>
+                </button>`
+            ).join('');
         }
 
-        function selectDay(dayNum) {
-            currentDay = dayNum;
-            renderDayButtons();
+        function selectDay(n) {
+            currentDay = n;
+            renderButtons();
             renderDay();
         }
 
         function renderDay() {
-            const day = days[currentDay];
-            
-            document.getElementById('dayTitle').textContent = `Day ${day.day + 1}: ${day.title}`;
-            document.getElementById('regionText').textContent = day.region;
-            document.getElementById('statDriving').textContent = `${day.stats.driving}km`;
-            document.getElementById('statSubway').textContent = `${day.stats.subway}m`;
-            document.getElementById('statWalking').textContent = `${day.stats.walking}km`;
-            document.getElementById('statTotal').textContent = day.stats.total;
+            const d = scheduleData[currentDay];
+            document.getElementById('dayTitle').textContent = `Day ${d.day + 1}: ${d.title}`;
+            document.getElementById('regionText').textContent = d.title;
+            document.getElementById('statDriving').textContent = `${d.stats.driving}km`;
+            document.getElementById('statSubway').textContent = `${d.stats.subway}km`;
+            document.getElementById('statWalking').textContent = `${d.stats.walking}km`;
 
-            // Set background map image
             const mapContainer = document.getElementById('mapContainer');
-            if (day.mapImage) {
-                mapContainer.style.backgroundImage = `url('${day.mapImage}')`;
-            } else {
-                mapContainer.style.backgroundImage = 'none';
-                mapContainer.style.backgroundColor = '#f3f4f6';
-            }
+            mapContainer.style.backgroundImage = d.mapImage ? `url('${d.mapImage}')` : 'none';
 
-            // Render routes on SVG
-            const svg = document.getElementById('mapSvg');
-            svg.innerHTML = day.routes.map(route => {
-                const from = day.locations[route.from];
-                const to = day.locations[route.to];
-                return `
-                    <line x1="${from.position.x}%" y1="${from.position.y}%" 
-                          x2="${to.position.x}%" y2="${to.position.y}%" 
-                          class="route-line ${getRouteColor(route.type)}" />
-                `;
+            document.getElementById('mapSvg').innerHTML = d.routes.map(r => {
+                const from = d.locations[r.from].position;
+                const to = d.locations[r.to].position;
+                return `<line x1="${from.x}%" y1="${from.y}%" x2="${to.x}%" y2="${to.y}%" class="route-line ${routeColors[r.type]}" />`;
             }).join('');
 
-            // Render location markers
-            const locContainer = document.getElementById('locations');
-            locContainer.innerHTML = day.locations.map((loc, idx) => `
+            document.getElementById('locations').innerHTML = d.locations.map((loc, i) => `
                 <div class="location-marker" style="left: ${loc.position.x}%; top: ${loc.position.y}%;">
-                    <div class="marker-icon ${getLocationColor(loc.type)}"></div>
-                    <div class="marker-label">${idx + 1}. ${loc.name}</div>
+                    <div class="marker-icon ${typeColors[loc.type]}"></div>
+                    <div class="marker-label">${i + 1}. ${loc.name}</div>
                 </div>
             `).join('');
 
-            // Render route list
-            const routeList = document.getElementById('routeList');
-            routeList.innerHTML = day.locations.map((loc, idx) => `
-                <div class="route-item">
-                    <div class="route-number ${getLocationColor(loc.type)}">${idx + 1}</div>
-                    <div class="route-details">
-                        <div class="route-name">${loc.name}</div>
-                        <div class="route-type">${loc.type}</div>
-                        ${day.routes[idx] ? `
-                            <div class="route-transport">
-                                <span>${getTransportIcon(day.routes[idx].type)}</span>
-                                <span>${day.routes[idx].duration}</span>
-                                <span>→</span>
-                            </div>
-                        ` : ''}
+            document.getElementById('timeline').innerHTML = d.schedule.map(s => `
+                <div class="timeline-item">
+                    <div class="timeline-time"><div class="time-badge">${s.time}</div></div>
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-location">${s.location}</div>
+                        <div class="timeline-activity">${s.activity}</div>
+                        ${s.transport ? `<div class="timeline-transport">${s.transport}</div>` : ''}
                     </div>
                 </div>
             `).join('');
         }
 
-        // Initialize
-        renderDayButtons();
+        renderButtons();
         renderDay();
     </script>
 </body>
