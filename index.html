@@ -290,10 +290,6 @@
                     </div>
                         <div class="map-container">
                             <div id="map"></div>
-                            <div class="region-label">
-                                <div class="region-label-title">Region</div>
-                                <div class="region-label-text" id="regionText">Malaysia</div>
-                            </div>
                         </div>
                     </div>
                     <div class="legend-grid">
@@ -612,7 +608,6 @@
             
             // Update title and stats
             document.getElementById('dayTitle').textContent = `Day ${d.day + 1}: ${d.title}`;
-            document.getElementById('regionText').textContent = d.title;
             document.getElementById('statDriving').textContent = `${d.stats.driving}km`;
             document.getElementById('statSubway').textContent = `${d.stats.subway}min`;
             document.getElementById('statWalking').textContent = `${d.stats.walking}km`;
